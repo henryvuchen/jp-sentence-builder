@@ -15,7 +15,7 @@ async function loadDictionary() {
       <h2>${first.kanji[0]} (${first.kana[0]}) — ${first.romaji}</h2>
       <p>${first.senses[0].gloss.join(", ")}</p>
     `;
-    document.body.appendChild(output);
+    document.getElementById("results").appendChild(output);
   } catch (err) {
     console.error("Error loading dictionary:", err);
   }
