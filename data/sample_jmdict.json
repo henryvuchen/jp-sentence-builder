@@ -1,0 +1,14 @@
+[
+  {
+    "kanji": ["食べる"],
+    "kana": ["たべる"],
+    "romaji": "taberu",
+    "senses": [{"gloss": ["to eat"]}]
+  },
+  {
+    "kanji": ["見る"],
+    "kana": ["みる"],
+    "romaji": "miru",
+    "senses": [{"gloss": ["to see; to watch"]}]
+  }
+]
