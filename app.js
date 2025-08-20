@@ -43,23 +43,19 @@ async function loadDictionary() {
       }
 
       matches.forEach(entry => {
-        const div = document.createElement("div");
-        div.innerHTML = `
-        div.querySelectorAll("button.add").forEach(btn => {
-  btn.addEventListener("click", () => addToken(btn.dataset.text));
+  const div = document.createElement("div");
+  div.innerHTML = `
+    <h2>${entry.kanji[0]} (${entry.kana[0]}) — ${entry.romaji}</h2>
+    <p>${entry.senses[0].gloss.join(", ")}</p>
+    <button class="add" data-text="${entry.kana[0]}">Add JP</button>
+    <button class="add" data-text="${entry.senses[0].gloss[0]}">Add EN</button>
+  `;
+
+  div.querySelectorAll("button.add").forEach(btn => {
+    btn.addEventListener("click", () => addToken(btn.dataset.text));
+  });
+
+  resultsDiv.appendChild(div);
 });
-  <h2>${entry.kanji[0]} (${entry.kana[0]}) — ${entry.romaji}</h2>
-  <p>${entry.senses[0].gloss.join(", ")}</p>
-  <button class="add" data-text="${entry.kana[0]}">Add JP</button>
-  <button class="add" data-text="${entry.senses[0].gloss[0]}">Add EN</button>
-`;
-        resultsDiv.appendChild(div);
-      });
-    });    
-    console.log("Dictionary loaded:", data.length, "entries");
-    } catch (err) {
-    console.error("Error loading dictionary:", err);
-  }
-}
 
 loadDictionary();
