@@ -7,15 +7,6 @@ async function loadDictionary() {
   try {
     let response = await fetch(url);
     let data = await response.json();
-ChatGPT said:
-
-Perfect — the search bar is now in place. ✅
-
-Instruction 28 — Add search logic to app.js.
-
-Open app.js → edit.
-
-Right after the line let data = await response.json();, insert this block:
 
     // Hook up search form
     const form = document.getElementById("searchForm");
