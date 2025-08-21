@@ -1,8 +1,8 @@
 // app.js — starter setup
 console.log("JP Sentence Builder app is connected.");
 // Supabase setup
-const SUPABASE_URL = "https://YOUR_PROJECT_URL.supabase.co"; 
-const SUPABASE_KEY = "YOUR_ANON_KEY"; 
+const SUPABASE_URL = "https://fvmezrnvoivtdwedhrll.supabase.co"; 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2bWV6cm52b2l2dGR3ZWRocmxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3NDA2NzcsImV4cCI6MjA3MTMxNjY3N30.wO4VZPsJOi1qr82NJbzrzX0sOnbb8w0H37HUI_MkYtc"; 
 const supabase = window.supabase.createClient(https://fvmezrnvoivtdwedhrll.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2bWV6cm52b2l2dGR3ZWRocmxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3NDA2NzcsImV4cCI6MjA3MTMxNjY3N30.wO4VZPsJOi1qr82NJbzrzX0sOnbb8w0H37HUI_MkYtc);
 // Sentence state + helpers
 const sentence = [];
