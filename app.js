@@ -1,6 +1,9 @@
 // app.js — starter setup
 console.log("JP Sentence Builder app is connected.");
-
+// Supabase setup
+const SUPABASE_URL = "https://YOUR_PROJECT_URL.supabase.co"; 
+const SUPABASE_KEY = "YOUR_ANON_KEY"; 
+const supabase = window.supabase.createClient(https://fvmezrnvoivtdwedhrll.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2bWV6cm52b2l2dGR3ZWRocmxsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3NDA2NzcsImV4cCI6MjA3MTMxNjY3N30.wO4VZPsJOi1qr82NJbzrzX0sOnbb8w0H37HUI_MkYtc);
 // Sentence state + helpers
 const sentence = [];
 function renderSentence() {
@@ -15,10 +18,17 @@ function addToken(text) {
 
 // Load JMdict JSON (test fetch)
 async function loadDictionary() {
-  const url = "data/sample_jmdict.json";
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+  const { data, error } = await supabase
+    .from('dictionary')
+    .select('*');
+
+  if (error) {
+    console.error("Supabase error:", error);
+    return;
+  }
+
+  console.log("Dictionary loaded:", data.length, "entries");
 
     // Clear button
     const clearBtn = document.getElementById("clearSentence");
