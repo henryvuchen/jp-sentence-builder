@@ -50,7 +50,7 @@ async function loadDictionary() {
       return;
     }
     try {
-      const { data, error } = await supabase.rpc("search_dictionary", {
+      const { data, error } = await supabase.rpc("search_dictionary_ranked", {
         q,        // search text
         lim: 25   // max rows to return
       });
