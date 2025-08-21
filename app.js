@@ -51,9 +51,9 @@ async function loadDictionary() {
     }
     try {
       const { data, error } = await supabase.rpc("search_dictionary_ranked", {
-        q,        // search text
-        lim: 25   // max rows to return
-      });
+  q: q,
+  lim: 25
+});
       if (error) {
         console.error("Supabase search error:", error);
         resultsDiv.textContent = "Search failed. Check console.";
