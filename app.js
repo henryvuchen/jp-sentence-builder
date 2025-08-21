@@ -52,11 +52,13 @@ async function loadDictionary() {
       matches.forEach(entry => {
         const div = document.createElement("div");
         div.innerHTML = `
-          <h2>${entry.kanji[0]} (${entry.kana[0]}) — ${entry.romaji}</h2>
-          <p>${entry.senses[0].gloss.join(", ")}</p>
-          <button class="add" data-text="${entry.kana[0]}">Add JP</button>
-          <button class="add" data-text="${entry.senses[0].gloss[0]}">Add EN</button>
-        `;
+  <h2>${entry.kanji[0]} (${entry.kana[0]}) — ${entry.romaji}</h2>
+  <p>${entry.senses[0].gloss.join(", ")}</p>
+  <button class="add" data-text="${(entry.kanji && entry.kanji[0]) || entry.kana[0]}">Add Kanji</button>
+  <button class="add" data-text="${entry.kana[0]}">Add Kana</button>
+  <button class="add" data-text="${entry.romaji}">Add Romaji</button>
+  <button class="add" data-text="${entry.senses[0].gloss[0]}">Add EN</button>
+`;
         div.querySelectorAll("button.add").forEach(btn => {
           btn.addEventListener("click", () => addToken(btn.dataset.text));
         });
