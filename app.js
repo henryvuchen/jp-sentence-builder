@@ -51,27 +51,26 @@ async function loadDictionary() {
       resultsDiv.textContent = "No matches found.";
       return;
     }
-    // Render results
-    data.forEach(entry => {
-      const div = document.createElement("div");
-      const kanji0  = (entry.kanji && entry.kanji[0]) || "";
-      const kana0   = (entry.kana  && entry.kana[0])  || "";
-      const romaji  = entry.romaji || "";
-      const glosses = (entry.gloss || []).join(", ");
-      div.innerHTML = `
-        <h2>${kanji0 || kana0} ${kanji0 && kana0 ? `(${kana0})` : ""} — ${romaji}</h2>
-        <p>${glosses}</p>
-        <button class="add" data-text="${kanji0 || kana0}">Add Kanji/Kana</button>
-        <button class="add" data-text="${kana0}">Add Kana</button>
-        <button class="add" data-text="${romaji}">Add Romaji</button>
-        <button class="add" data-text="${(entry.gloss && entry.gloss[0]) || ""}">Add EN</button>
-      `;
-      div.querySelectorAll("button.add").forEach(btn => {
-        btn.addEventListener("click", () => addToken(btn.dataset.text));
-      });
-      resultsDiv.appendChild(div);
-    });
+    / Render results
+data.forEach(entry => {
+  const div = document.createElement("div");
+  const kanji0  = (entry.kanji && entry.kanji[0]) || "";
+  const kana0   = (entry.kana  && entry.kana[0])  || "";
+  const romaji  = entry.romaji || "";
+  const glosses = (entry.gloss || []).join(", ");
+  div.innerHTML = `
+    <h2>${kanji0 || kana0} ${kanji0 && kana0 ? '(' + kana0 + ')' : ''} — ${romaji}</h2>
+    <p>${glosses}</p>
+    <button class="add" data-text="${kanji0 || kana0}">Add Kanji/Kana</button>
+    <button class="add" data-text="${kana0}">Add Kana</button>
+    <button class="add" data-text="${romaji}">Add Romaji</button>
+    <button class="add" data-text="${(entry.gloss && entry.gloss[0]) || ""}">Add EN</button>
+  `;
+  div.querySelectorAll("button.add").forEach(btn => {
+    btn.addEventListener("click", () => addToken(btn.dataset.text));
   });
+  resultsDiv.appendChild(div);
+});
   console.log("Dictionary search ready (server-side).");
 }
 
