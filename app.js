@@ -51,7 +51,7 @@ async function loadDictionary() {
         entry.kanji.some(k => k.includes(q)) ||
         entry.kana.some(k => k.includes(q)) ||
         entry.romaji.toLowerCase().includes(q) ||
-        entry.senses.some(s => s.gloss.join(", ").toLowerCase().includes(q))
+        (entry.gloss || []).join(", ").toLowerCase().includes(q)
       );
 
       if (matches.length === 0) {
@@ -63,11 +63,11 @@ async function loadDictionary() {
         const div = document.createElement("div");
         div.innerHTML = `
   <h2>${entry.kanji[0]} (${entry.kana[0]}) — ${entry.romaji}</h2>
-  <p>${entry.senses[0].gloss.join(", ")}</p>
+  <p>${entry.gloss.join(", ")}</p>
   <button class="add" data-text="${(entry.kanji && entry.kanji[0]) || entry.kana[0]}">Add Kanji</button>
   <button class="add" data-text="${entry.kana[0]}">Add Kana</button>
   <button class="add" data-text="${entry.romaji}">Add Romaji</button>
-  <button class="add" data-text="${entry.senses[0].gloss[0]}">Add EN</button>
+  <button class="add" data-text="${entry.gloss[0] || ''}">Add EN</button>
 `;
         div.querySelectorAll("button.add").forEach(btn => {
           btn.addEventListener("click", () => addToken(btn.dataset.text));
