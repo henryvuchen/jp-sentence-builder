@@ -40,10 +40,14 @@ async function loadDictionary() {
       resultsDiv.textContent = "Type something to search.";
       return;
     }
-    // === The search call ===
-    const { data, error } = await supabase.rpc("search_dictionary_fast", { q: q, lim: 25 });
+    // DIRECT indexed full-text search on search_text (no RPC, no timeout)
+    let { data, error } = await supabase
+      .from("dictionary")
+      .select("kanji,kana,romaji,gloss")
+      .textSearch("search_text", q, { config: "simple", type: "plain" }) // uses plainto_tsquery
+      .limit(25);
     if (error) {
-      console.error("Supabase search error:", error);
+      console.error("Supabase query error:", error);
       resultsDiv.textContent = "Search failed. Check console.";
       return;
     }
@@ -52,12 +56,13 @@ async function loadDictionary() {
       return;
     }
     // Render results
-    data.forEach(entry => {
+    data.forEach((entry) => {
       const div = document.createElement("div");
-      const kanji0  = (entry.kanji && entry.kanji[0]) || "";
-      const kana0   = (entry.kana  && entry.kana[0])  || "";
-      const romaji  = entry.romaji || "";
-      const glosses = (entry.gloss || []).join(", ");
+      const kanji0 = Array.isArray(entry.kanji) && entry.kanji.length ? entry.kanji[0] : "";
+      const kana0  = Array.isArray(entry.kana)  && entry.kana.length  ? entry.kana[0]  : "";
+      const romaji = entry.romaji || "";
+      const gloss0 = Array.isArray(entry.gloss) && entry.gloss.length ? entry.gloss[0] : "";
+      const glosses = Array.isArray(entry.gloss) ? entry.gloss.join(", ") : "";
       div.innerHTML =
         "<h2>" + (kanji0 || kana0) +
         (kanji0 && kana0 ? " (" + kana0 + ")" : "") +
@@ -66,15 +71,15 @@ async function loadDictionary() {
         '<button class="add" data-text="' + (kanji0 || kana0) + '">Add Kanji/Kana</button> ' +
         '<button class="add" data-text="' + kana0 + '">Add Kana</button> ' +
         '<button class="add" data-text="' + romaji + '">Add Romaji</button> ' +
-        '<button class="add" data-text="' + ((entry.gloss && entry.gloss[0]) || "") + '">Add EN</button>';
-      div.querySelectorAll("button.add").forEach(btn => {
+        '<button class="add" data-text="' + gloss0 + '">Add EN</button>';
+      div.querySelectorAll("button.add").forEach((btn) => {
         btn.addEventListener("click", () => addToken(btn.dataset.text));
       });
       resultsDiv.appendChild(div);
     });
   });
   form._wired = true;
-  console.log("Dictionary search ready.");
+  console.log("Dictionary search ready (direct FTS).");
 }
 // Kick off
 loadDictionary();
