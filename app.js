@@ -19,7 +19,6 @@ function addToken(text) {
 window.addToken = addToken;
 // --- Main wiring ---
 async function loadDictionary() {
-  // Clear button
   const clearBtn = document.getElementById("clearSentence");
   if (clearBtn && !clearBtn._wired) {
     clearBtn.addEventListener("click", () => {
@@ -28,7 +27,6 @@ async function loadDictionary() {
     });
     clearBtn._wired = true;
   }
-  // Search form
   const form = document.getElementById("searchForm");
   if (!form || form._wired) return;
   form.addEventListener("submit", async function (e) {
@@ -36,26 +34,19 @@ async function loadDictionary() {
     const q = document.getElementById("q").value.trim();
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
-    if (!q) {
-      resultsDiv.textContent = "Type something to search.";
-      return;
-    }
-    // DIRECT indexed full-text search on search_text (no RPC, no timeout)
+    if (!q) { resultsDiv.textContent = "Type something to search."; return; }
+    // Bare-minimum connectivity test: romaji ILIKE
     let { data, error } = await supabase
       .from("dictionary")
       .select("kanji,kana,romaji,gloss")
-      .textSearch("search_text", q, { config: "simple", type: "plain" }) // uses plainto_tsquery
+      .ilike("romaji", `%${q}%`)
       .limit(25);
     if (error) {
       console.error("Supabase query error:", error);
       resultsDiv.textContent = "Search failed. Check console.";
       return;
     }
-    if (!data || data.length === 0) {
-      resultsDiv.textContent = "No matches found.";
-      return;
-    }
-    // Render results
+    if (!data || data.length === 0) { resultsDiv.textContent = "No matches found."; return; }
     data.forEach((entry) => {
       const div = document.createElement("div");
       const kanji0 = Array.isArray(entry.kanji) && entry.kanji.length ? entry.kanji[0] : "";
@@ -79,7 +70,7 @@ async function loadDictionary() {
     });
   });
   form._wired = true;
-  console.log("Dictionary search ready (direct FTS).");
+  console.log("Dictionary search ready (simple ILIKE).");
 }
 // Kick off
 loadDictionary();
