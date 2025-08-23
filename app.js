@@ -41,10 +41,7 @@ async function loadDictionary() {
       return;
     }
     // === The search call ===
-    const { data, error } = await supabase.rpc("search_dictionary_ranked", {
-      q: q,
-      lim: 25
-    });
+    const { data, error } = await supabase.rpc("search_dictionary_fast", { q: q, lim: 25 });
     if (error) {
       console.error("Supabase search error:", error);
       resultsDiv.textContent = "Search failed. Check console.";
