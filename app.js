@@ -19,59 +19,37 @@ function addToken(text) {
 window.addToken = addToken;
 // --- Main wiring ---
 async function loadDictionary() {
+  const form = document.getElementById("searchForm");
+  const resultsDiv = document.getElementById("results");
   const clearBtn = document.getElementById("clearSentence");
   if (clearBtn && !clearBtn._wired) {
-    clearBtn.addEventListener("click", () => {
-      sentence.length = 0;
-      renderSentence();
-    });
+    clearBtn.addEventListener("click", () => { sentence.length = 0; renderSentence(); });
     clearBtn._wired = true;
   }
-  const form = document.getElementById("searchForm");
   if (!form || form._wired) return;
-  form.addEventListener("submit", async function (e) {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const q = document.getElementById("q").value.trim();
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
-    if (!q) { resultsDiv.textContent = "Type something to search."; return; }
-    // Bare-minimum connectivity test: romaji ILIKE
-    let { data, error } = await supabase
+    resultsDiv.textContent = "Running connectivity test…";
+    // MINIMAL query: 1 row, exact match, romaji-only
+    const { data, error } = await supabase
       .from("dictionary")
-      .select("kanji,kana,romaji,gloss")
-      .ilike("romaji", `%${q}%`)
-      .limit(25);
+      .select("romaji, kanji, kana, gloss")
+      .eq("romaji", "taberu")
+      .limit(1);
     if (error) {
-      console.error("Supabase query error:", error);
-      resultsDiv.textContent = "Search failed. Check console.";
+      console.error("Supabase MIN test error:", error);
+      resultsDiv.textContent = "MIN test failed: " + (error.code || "") + " " + (error.message || "");
       return;
     }
-    if (!data || data.length === 0) { resultsDiv.textContent = "No matches found."; return; }
-    data.forEach((entry) => {
-      const div = document.createElement("div");
-      const kanji0 = Array.isArray(entry.kanji) && entry.kanji.length ? entry.kanji[0] : "";
-      const kana0  = Array.isArray(entry.kana)  && entry.kana.length  ? entry.kana[0]  : "";
-      const romaji = entry.romaji || "";
-      const gloss0 = Array.isArray(entry.gloss) && entry.gloss.length ? entry.gloss[0] : "";
-      const glosses = Array.isArray(entry.gloss) ? entry.gloss.join(", ") : "";
-      div.innerHTML =
-        "<h2>" + (kanji0 || kana0) +
-        (kanji0 && kana0 ? " (" + kana0 + ")" : "") +
-        " — " + romaji + "</h2>" +
-        "<p>" + glosses + "</p>" +
-        '<button class="add" data-text="' + (kanji0 || kana0) + '">Add Kanji/Kana</button> ' +
-        '<button class="add" data-text="' + kana0 + '">Add Kana</button> ' +
-        '<button class="add" data-text="' + romaji + '">Add Romaji</button> ' +
-        '<button class="add" data-text="' + gloss0 + '">Add EN</button>';
-      div.querySelectorAll("button.add").forEach((btn) => {
-        btn.addEventListener("click", () => addToken(btn.dataset.text));
-      });
-      resultsDiv.appendChild(div);
-    });
+    if (!data || data.length === 0) {
+      resultsDiv.textContent = "MIN test: no rows for exact romaji 'taberu'.";
+      return;
+    }
+    const row = data[0];
+    resultsDiv.textContent = "MIN test OK → " + (row.kanji?.[0] || row.kana?.[0] || row.romaji) + " — " + (row.gloss?.[0] || "");
   });
   form._wired = true;
-  console.log("Dictionary search ready (simple ILIKE).");
-}
+  console.log("MIN connectiv
 
 // Kick off
 loadDictionary();
