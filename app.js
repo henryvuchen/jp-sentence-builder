@@ -72,6 +72,7 @@ async function loadDictionary() {
   form._wired = true;
   console.log("Dictionary search ready (simple ILIKE).");
 }
+
 // Kick off
 loadDictionary();
 
