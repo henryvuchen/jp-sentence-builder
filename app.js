@@ -1,5 +1,4 @@
-/ app.js — full file (top to bottom)
-// Uses phased, fast queries (no RPC) and client-side ranking to avoid timeouts.
+// app.js — full file (top to bottom)
 console.log("JP Sentence Builder app is connected.");
 // ===== Supabase setup (your real values) =====
 const SUPABASE_URL = "https://fvmezrnvoivtdwedhrll.supabase.co"; // keep yours
